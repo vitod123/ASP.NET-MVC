@@ -1,0 +1,95 @@
+﻿@using BusinessLogic
+@using BusinessLogic.Interfaces
+@model List<DataAccess.Entites.Car>
+@inject ICartService CartService
+
+<div class="text-center">
+    <h1 class="display-4">Car Catalog</h1>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var c in Model)
+    {
+        <div class="col">
+            <a class="card-link-block" 
+                asp-controller="Car" 
+                asp-action="Details" 
+                asp-route-id="@c.Id" 
+                asp-route-returnUrl="@Context.Request.Path">
+            <div class="card h-100">
+                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false" data-bs-touch=true>
+                    <div class="carousel-inner ">
+                        <div class="carousel-item active">
+                            <img src="@c.ImagePath" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://static.carthrottle.com/workspace/uploads/posts/2017/07/43df24faa6299543bb3c862724432333.JPG" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="http://images4.fanpop.com/image/photos/22300000/Random-Cars-autorev-22326979-1400-930.jpg" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+                <div class="card-body container">
+                    <h5 class="card-title">@c.Name  @c.Year</h5>
+                    <strong class="price">
+                        <h4 class="card-text">@c.Price $</h4>
+                    </strong>
+                    <div class="row row-cols-2">
+                        <p class="card-text col">
+                            <i class="bi bi-speedometer2"></i>
+                            @c.Km 000 Km
+                        </p>
+                        <p class="card-text col">
+                            <i class="bi bi-geo-alt"></i>
+                            @c.City
+                        </p>
+                        <p class="card-text col">
+                            <i class="bi bi-fuel-pump-fill"></i>
+                            @c.Fuel
+                        </p>
+                        <p class="card-text col">
+                            @if(c.Transmission == "Manual")
+                            {    
+                                <img class="tr" src="https://static.thenounproject.com/png/205474-200.png">
+                            }
+                            @if(c.Transmission == "Automat")
+                            {
+                                <img class="tr" src="https://furtaev.ru/preview/automatic_transmission_2_small.png">
+                            }
+                            @if(c.Transmission == "Robot"){
+                                <img class="tr" src="https://icon-library.com/images/r-icon/r-icon-26.jpg">
+                            }
+                            @c.Transmission
+                        </p>
+                    </div>
+                    
+                </div>
+
+                @if(CartService.IsInCart(c.Id))
+                {
+                    <a asp-controller="Cart" asp-action="Remove" asp-route-carId="@c.Id" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline-danger">
+                        <i class="bi bi-bag-plus"></i> Remove from Cart
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Cart" asp-action="Add" asp-route-carId="@c.Id" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline-success">
+                        <i class="bi bi-bag-plus"></i> Add to Cart
+                    </a>
+                }
+                
+            </div>
+            </a>
+        </div>
+    }
+</div>
